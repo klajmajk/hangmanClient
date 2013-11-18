@@ -1,8 +1,6 @@
 package se.kth.id2212.hw1.client;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import se.kth.id2212.hw1.client.view.View;
 
 /**
  *
@@ -14,8 +12,18 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Controller controller = new Controller();
-        controller.startNewGame();
+        final Controller controller = new Controller();
+        
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                View view = new View(controller);
+                controller.setView(view);
+                view.setVisible(true);
+            }
+        });
+        
+        /*
+        
         while (true) {
             try {
                 BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -27,6 +35,7 @@ public class Main {
                 io.printStackTrace();
             }
         }
+        */
 //        controller.startNewGame();
 //        controller.guessLetter('e');
 //        controller.guessLetter('n');

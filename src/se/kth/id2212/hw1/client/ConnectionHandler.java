@@ -19,12 +19,31 @@ public class ConnectionHandler {
 
     public ConnectionHandler() {
         try {
-            this.server = new Socket("localhost", 5555); //TODO
+            this.server = new Socket("localhost", 5555);
             this.oos = new ObjectOutputStream(server.getOutputStream());
             this.ois = new ObjectInputStream(server.getInputStream());
         } catch (IOException ex) {
             System.err.println(ex.getMessage());
         }
+    }
+
+    public ConnectionHandler(String address, int port) {
+        try {
+            this.server = new Socket(address, port);
+            this.oos = new ObjectOutputStream(server.getOutputStream());
+            this.ois = new ObjectInputStream(server.getInputStream());
+        } catch (IOException ex) {
+            System.err.println(ex.getMessage());
+        }
+    }
+    
+    public boolean getStatus() {
+        try {
+            return this.server.isConnected();
+        } catch(Exception e) {
+            return false;
+        }
+            
     }
 
     public Response sendRequest(Request req) {
