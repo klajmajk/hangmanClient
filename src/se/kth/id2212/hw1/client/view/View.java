@@ -16,6 +16,7 @@ public class View extends javax.swing.JFrame {
 
     private Controller controller;
     private String lettersGuessed;
+
     /** Creates new form View */
     public View(Controller controller) {
         this.controller = controller;
@@ -235,28 +236,39 @@ public class View extends javax.swing.JFrame {
     }//GEN-LAST:event_sendButtonActionPerformed
 
     private void handleSend() {
-        String typed = guessTextField.getText();
-        
-        if (typed.length() == 1) {
-            char typedChar = typed.charAt(0);
-            controller.guessLetter(typedChar);
-            
-            guessTextField.setText("");
-            lettersGuessed += typedChar + " ";
-            guessedLettersLabel.setText(lettersGuessed);
-            
-        } else if (typed.length() > 1) {
-            controller.guessWord(typed);
+        new Thread(new Runnable() {
+            public void run() {
+                String typed = guessTextField.getText();
+
+                if (typed.length() == 1) {
+                    char typedChar = typed.charAt(0);
+                    controller.guessLetter(typedChar);
+                    guessTextField.setText("");
+                    lettersGuessed += typedChar + " ";
+                    guessedLettersLabel.setText(lettersGuessed);
+                } else if (typed.length() > 1) {
+                    controller.guessWord(typed);
+                }
+
+                guessTextField.requestFocusInWindow();
+            }
         }
-        
-        guessTextField.requestFocusInWindow();
+        ).start();
     }
 
     private void newGameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newGameButtonActionPerformed
-        controller.startNewGame();
-        this.lettersGuessed = "";
-        guessedLettersLabel.setText(lettersGuessed);
-        sendButton.setEnabled(true);
+        /* Here the best practice is to call controller.handleNewGame(this.lettersGuessed, guessedLettersLabel, sendButton, this)
+           In the controller we call a Thread class NewGameThread for example, taking all these parameters in its constructor
+           Then the Thread class implements the following method
+           Here we keep it simple */
+        new Thread(new Runnable() {
+            public void run() {
+                controller.startNewGame();
+                lettersGuessed = "";
+                guessedLettersLabel.setText(lettersGuessed);
+                sendButton.setEnabled(true);
+            }
+        }).start();
     }//GEN-LAST:event_newGameButtonActionPerformed
 
     private void connectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectButtonActionPerformed
